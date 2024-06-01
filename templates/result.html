@@ -1,0 +1,54 @@
+{% extends 'index.html' %}
+{% block content %}
+{% load static %}
+<section class="body Upload  white">
+    <section class=" upload_heading_box white">
+            <h2 class=" uploadbox_heading heading_box url_heading_box white" onclick="setUrlForm()">Scan URL</h2>
+            <h2 class=" uploadbox_heading heading_box file_heading_box white" onclick="setFileForm()">FILE URL</h2>
+        </section>
+    <section id="file_form " class="file_form_section white">
+        <form method="post" action="" enctype="multipart/form-data" class=" file_form">
+            {% csrf_token %}
+           <div class="fileForm">
+            {{ form.as_p }}
+            </div>
+            <button type="submit">Upload and Scan</button>
+          </form>
+          
+
+       </section>
+    
+       <section id="url_form"class=' url_form_section url_form white'>
+        <form class="url_form " action="url_result"  method="post">
+    
+            {%csrf_token%}
+            <label class="" for="text">enter the url</label>
+           <input type="url" name="text" id="text">
+           <button type="submit">Submit</button>
+        
+       </section>
+       {% if url_output %}
+       <section id="url_output" class=" output">
+            
+        <h2>url:</h2><span>{{url}}</span>
+        <h2>positives:</h2><span>{{positives}}</span>
+        <h2>result:</h2><span>{{result}}</span>
+        <h2>total:</h2><span>{{total}}</span>
+        </section>
+        {%endif%}
+        {% if file_output %}
+       <section id="file_output" class=" output">
+        <h2>filename:<span>{{name}}</span></h2>
+        <h2>size:<span>{{size}}</span></h2>
+        <h2>hash:<span>{{hash}}</span></h2>
+        <h2>descp:<span>{{descp}}</span></h2>
+        <h2>verdict:<span>{{verdict}}</span></h2>
+        {%if malicious_count%}
+        <h2><span>{{malicious_count}}</span>antivirus found the given file malicious!!</h2>
+       {%else%}
+       <h2>No antivirus found the given file malicious!!</h2>
+       {%endif%}
+        </section>
+        {%endif%}
+   </section>
+{% endblock %}

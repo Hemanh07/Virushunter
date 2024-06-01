@@ -1,0 +1,334 @@
+{% extends 'index.html' %} {% block url %} {% load static %}
+<style>
+  .url_page {
+    margin-top: 65px;
+    height: 588px;
+    width: 58vw;
+    padding: 0.5rem;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding-top: 2.5rem;
+  }
+  .url_form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 20px;
+    font-size: 3rem;
+  }
+  input[type="url"] {
+    width: 30vw;
+    height: 2rem;
+    padding: 2rem;
+    font-size: 1.5rem;
+    border: 0;
+    background-color: #fff;
+    border-radius: 20px;
+  }
+  input[type="url"]:focus {
+    outline: none;
+    box-shadow: 1px 1px 10px 1px #390084;
+  }
+  .input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .scan_button {
+    background-color: #390084;
+    font-size: 1.5rem;
+    padding: 0.5rem 4rem;
+
+    color: #ffffff;
+    border-radius: 20px;
+  }
+  .scan_button:hover {
+    background-color: #4c2580;
+    cursor: pointer;
+  }
+  .outputs {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    gap: 10px;
+  }
+  .loading_gif {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+  }
+  #url_output {
+    display: none;
+    margin-top: 70px;
+
+  }
+
+  table {
+    display: none;
+  }
+  tr {
+    height: 50px;
+  }
+  table {
+    height: 59%;
+  }
+  canvas {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    width: 100vw;
+    max-width: 800px;
+    height: 100vh;
+  }
+  .flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #url {
+    overflow: scroll;
+  }
+ 
+  .img,
+  .image {
+    display: none;
+  }
+  #output {
+    color: #68bd73;
+    font-size: 3rem;
+    text-align: center;
+    
+  }
+  .output {
+    background-color: rgba(0, 0, 0, 0.05);
+    display: flex;
+    width: 100%;
+    padding: 0rem;
+    justify-content: space-between;
+    border-radius: 50px;
+    color: #958f8f;
+  }
+  .output div {
+    padding: 2rem;
+    padding-bottom: 1rem;
+
+  }
+  .output div h2,
+  p {
+    font-size: 1.5rem;
+  }
+  .outputdiv2{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+  }
+  .outputdiv1,.outputdiv3{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .positive {
+    font-size: 1.5rem;
+    color: #65bd73;
+  }
+  .negative {
+    font-size: 1.5rem;
+    color: red;
+  }
+  .positiveBackground{
+animation:0.2s greenblink linear;  }
+.negativeBackground{
+animation:0.2s redblink ;  }
+@keyframes redblink{
+  from {background-color: rgb(255, 192, 192);}
+  to {background-color: rgb(255, 183, 183);}
+}
+@keyframes greenblink{
+  from {background-color: #c0f3c8;}
+  to {background-color: #65bd73;}
+}
+
+
+</style>
+<div class="url_page" id="url_page">
+  <img
+    src="../static/url.png"
+    height="150px"
+    width="150px"
+    alt=""
+    srcset=""
+  />
+  <form class="url_form" id="url_form" action="url_scan" method="post">
+    {%csrf_token%}
+
+    <label class="text" for="text">Enter The Url:</label>
+    <input type="url" name="text" required id="text" />
+
+    <button type="submit" class="scan_button">Submit</button>
+    <img class="img" src="" height="150px" width="150px" alt="" />
+    <div class="loader" id="loader">
+      <div class="outermost flex">
+        <div class="outer flex">
+          <div class="outbounce flex">
+            <div class="flex dottedring">
+              <div class="centergaurd flex">
+                <div class="center"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<section id="url_output" class="url_page outputs">
+ 
+  <div class="outputbox">
+   <div class="outputdiv2"> <h1 id="output">
+    SECURE </h1><img src="" class="checked" height="50px" width="50px" alt="" />
+  </div>
+
+    <div class="output">
+      <div class="outputdiv1">
+        <div>
+          <h2>Scanned Url</h2>
+          <p id="urllink" class="positive">0</p>
+        </div>
+        <div>
+          <img src="" class="checked" height="150px" width="150px" alt="" />
+        </div>
+      </div>
+      <div class="outputdiv2">
+        <img
+          src=""
+          class="loads"
+          height="150px"
+          width="150px"
+          alt=""
+          srcset=""
+        />
+      </div>
+      <div class="outputdiv3">
+        <div>
+          <h2>ANTIVIRUS USED</h2>
+          <strong
+            ><p
+              style="color: cornflowerblue; font-size: 4rem; text-align: center"
+            >
+              94
+            </p>
+          </strong>
+        </div>
+        <div>
+          <h2 style="text-align: center">POSITIVES</h2>
+          <strong>
+            <p
+              style="color: #68bd73; font-size: 4rem; text-align: center"
+              class="positive"
+              id="positive"
+            >
+              2
+            </p>
+          </strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("url_form");
+    const loadingContainer = document.getElementById("loader");
+    const responseContainer = document.getElementById("url_output");
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      document.querySelector(".img").style.display = "block";
+      document.querySelector(".img").src =
+        "../static/virus-scan-10384764-8457311-unscreen.gif";
+      loadingContainer.style.display = "none";
+      responseContainer.style.display = "none";
+
+      const formData = new FormData(form);
+      const csrfToken = form.querySelector("[name=csrfmiddlewaretoken]").value;
+
+      fetch(form.action, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrfToken,
+        },
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(document.querySelector("input").value);
+
+          if (data.positives < 2) {
+            console.log("done");
+            document.querySelector(".loads").src =
+              "../static/virus-scan-success-10384765-84-unscreen.gif";
+              document.querySelectorAll('.checked').forEach(data=> data.src="../static/checked.png")
+              document.getElementById('url_output').setAttribute('class','positiveBackground')
+
+          } 
+          else if (data.positives < 4) {
+            console.log("done");
+            document.querySelector(".loads").src =
+              "../static/virus-scan-success-10384765-84-unscreen.gif";
+              document.querySelector("#urllink").style.color = "#ffb400";
+            document.querySelector("#positive").style.color = "#ffb400";
+            document.querySelector("#output").style.color = "#ffb400";
+              document.querySelectorAll('.checked').forEach(data=> data.src="../static/maybe.png")
+              document.getElementById('url_output').setAttribute('class','positiveBackground')
+          } else {
+            console.log("no");
+            document.querySelectorAll('.checked').forEach(data=> data.src="../static/wrong.png")
+
+            document.querySelector("#urllink").style.color = "red";
+            document.querySelector("#positive").style.color = "red";
+            document.querySelector("#output").style.color = "red";
+            document.querySelector(".loads").src =
+              "../static/virus-scan-error-10384766-8457-unscreen.gif";
+              document.getElementById('url_output').setAttribute('class','negativeBackground')
+
+          }
+
+          setTimeout(60, () => {
+            console.log("pending");
+          });
+          if (data.error) {
+            responseContainer.innerHTML = `<p>An ddderror occurred: ${data.error}</p>`;
+          } else {
+            document.getElementById("url_page").style.display = "none";
+            responseContainer.style.display = "flex";
+            document.querySelector("#urllink").innerText = data.url;
+            document.querySelector("#positive").innerText = data.positives;
+            document.querySelector("#output").innerText = data.result;
+          }
+        })
+        .catch((error) => {
+          loadingContainer.style.display = "none";
+          responseContainer.style.display = "block";
+          responseContainer.innerHTML = `<p>An error occurred: ${error.message}</p>`;
+        });
+    });
+  });
+</script>
+{% endblock %}

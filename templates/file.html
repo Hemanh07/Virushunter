@@ -1,0 +1,356 @@
+{% extends 'index.html' %} {% block file %} {% load static %}
+
+<style>
+  .file_page {
+    margin-top: 65px;
+    height: 588px;
+    width: 58vw;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    color: #000;
+    text-shadow: 2px 2px 10px white;
+    padding-top: 2.5rem;
+  }
+
+  .file_form {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+  }
+
+  .fileForm {
+    border: 0;
+    display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  }
+
+  .fileForm > input {
+    opacity: 0;
+    width: 200px;
+    height: 250px;
+  }
+  .fileForm input {
+    border: 10px red solid;
+  }
+
+  .scan_button {
+    background-color: #390084;
+    font-size: 1.5rem;
+
+    padding: 0.5rem 4rem;
+
+    color: #ffffff;
+    border-radius: 20px;
+  }
+
+  .scan_button:hover {
+    background-color: #4c2580;
+    cursor: pointer;
+  }
+
+  .output {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 65px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    text-shadow: 2px 2px 10px white;
+    display: none;
+  }
+
+  .text {
+    font-size: 1.5rem;
+  }
+
+  .resultdata {
+    font-size: 1.5rem;
+  }
+
+  .browseButton {
+    position: absolute;
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  }
+  .browseButton:active {
+    border: 10px red solid;
+  }
+  .browseButton h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+  
+
+  .loader {
+    display: flex;
+    justify-content: center;
+    width: 300px;
+    height: 300px;
+    display: none;
+  }
+
+  .loader div {
+    border-radius: 50%;
+  }
+
+  .img {
+    display: none;
+  }
+  .resultdata {
+    font-size: 1.5rem;
+  }
+  table {
+    height: 59%;
+  }
+
+  #output {
+    color: #68bd73;
+    font-size: 3rem;
+    text-align: center;
+  }
+  .outputs {
+    background-color: rgba(0, 0, 0, 0.05);
+    display: flex;
+    width: 100%;
+    padding: 0rem;
+    justify-content: space-between;
+    border-radius: 50px;
+    color: #958f8f;
+  }
+  #file_output div {
+    padding: 2rem;
+    padding-bottom: 1rem;
+  }
+  .output div h2,
+  p {
+    font-size: 1.5rem;
+  }
+  .outputdiv2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .outputdiv1,
+  .outputdiv3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .positive {
+    font-size: 1.5rem;
+    color: #65bd73;
+  }
+  .negative {
+    font-size: 1.5rem;
+    color: red;
+  }
+  .positiveBackground{
+animation:0.2s greenblink linear;  }
+.negativeBackground{
+animation:0.2s redblink ;  }
+@keyframes redblink{
+  from {background-color: rgb(255, 192, 192);}
+  to {background-color: rgb(255, 183, 183);}
+}
+@keyframes greenblink{
+  from {background-color: #c0f3c8;}
+  to {background-color: #65bd73;}
+}
+.floater{
+  position: absolute;
+  height: 588px;
+    width: 58vw;
+    background-color: rgba(0, 0, 0, 0.01);
+    display: none;
+}
+.outputdiv1{
+  gap: 80px;
+  justify-content:none;
+}
+</style>
+<div id="file_page" class="file_page">
+  <form
+    method="post"
+    action="file_scan"
+    enctype="multipart/form-data"
+    class="file_form"
+    id="file_form"
+  >
+    {% csrf_token %}
+    <div class="fileForm">
+      <div class="browseButton">
+        <img src="../static/upload.png" height="200px" width="200px" alt="" />
+        <h1>Browse</h1>
+      </div>
+      {{ form.file}}
+    
+    <p> or Drag and Drop the File </p></div>
+    <br />
+    <button type="submit" class="scan_button">Scan</button>
+    <h2 id="filepath"></h2>
+    <img class="img" src="" height="150px" width="150px" alt="" />
+<div class="floater"></div>
+   
+  </form>
+</div>
+
+<section id="file_output" class=" output">
+
+  <div class="outputbox">
+    <div class="outputdiv2">
+      <h1 id="output">SECURE</h1>
+      <img src="" class="checked" height="50px" width="50px" alt="" />
+    </div>
+
+    <div class="outputs">
+      <div class="outputdiv1" >
+        <div>
+          <h2>Scanned File</h2>
+          <p id="urllink" class="positive">0</p>
+        </div>
+        <div>
+          <h2>File Size</h2>
+          <p id="filesize" class="positive"></p>
+        </div>
+      </div>
+      <div class="outputdiv2">
+        <img
+          src=""
+          class="loads"
+          height="150px"
+          width="150px"
+          alt=""
+          srcset=""
+        />
+      </div>
+      <div class="outputdiv3">
+        <div>
+          <h2>ANTIVIRUS USED</h2>
+          <strong
+            ><p
+              style="color: cornflowerblue; font-size: 4rem; text-align: center"
+            >
+              63
+            </p>
+          </strong>
+        </div>
+        <div>
+          <h2 style="text-align: center">POSITIVES</h2>
+          <strong>
+            <p
+              style="color: #68bd73; font-size: 4rem; text-align: center"
+              class="positive"
+              id="positive"
+            >
+              2
+            </p>
+          </strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.getElementById("fileinput").addEventListener("change", (e) => {
+    let filename = document.getElementById("fileinput").value;
+    document.getElementById("filepath").innerText = filename.slice(12);
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("file_form");
+    const loadingContainer = document.getElementById("loader");
+    const responseContainer = document.getElementById("file_output");
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      document.querySelector(".img").style.display = "block";
+      document.querySelector(".img").src =
+        "../static/virus-scan-10384764-8457311-unscreen.gif";
+
+      //loadingContainer.style.display = "block";
+      responseContainer.style.display = "none";
+
+      const formData = new FormData(form);
+      const fileObject = formData.get("file");
+      const { name } = fileObject;
+      console.log(name);
+      const csrfToken = form.querySelector("[name=csrfmiddlewaretoken]").value;
+
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": csrfToken,
+          },
+          body: formData,
+        });
+
+        const data = await response.json();
+        console.log(
+          data,
+          "hi",
+          data.size,
+        );
+        if (data.malicious_count == 0) {
+          console.log("done");
+          document.querySelector(".loads").src =
+            "../static/virus-scan-success-10384765-84-unscreen.gif";
+          document
+            .querySelectorAll(".checked")
+            .forEach((data) => (data.src = "../static/checked.png"));
+            document.querySelector("#output").innerText = "SECURE";
+            document.getElementById('file_output').setAttribute('class','positiveBackground')
+
+        } else {
+          console.log("no");
+          document
+            .querySelectorAll(".checked")
+            .forEach((data) => (data.src = "../static/wrong.png"));
+            document.querySelector("#output").innerText = "MALICIOUS";
+          document.querySelector("#urllink").style.color = "red";
+          document.querySelector("#positive").style.color = "red";
+          document.querySelector("#output").style.color = "red";
+          document.querySelector("#filesize").style.color = "red";
+          document.querySelector(".loads").src =
+            "../static/virus-scan-error-10384766-8457-unscreen.gif";
+            document.getElementById('file_output').setAttribute('class','negativeBackground')
+
+        }
+
+        
+        if (data.error) {
+          responseContainer.innerHTML = `<p>An error occurred: ${data.error}</p>`;
+        }
+        else{
+          document.getElementById("file_page").style.display = "none";
+            responseContainer.style.display = "flex";
+            document.querySelector("#urllink").innerText = name;
+            document.querySelector("#positive").innerText = data.malicious_count;
+            document.querySelector("#filesize").innerText = `${data.size.toFixed(1)}KB`;
+
+        }
+      } catch (error) {
+        console.log(error);
+        loadingContainer.style.display = "none";
+        responseContainer.style.display = "block";
+        responseContainer.innerHTML = `<p style="color:'white;'>An error occurred: ${error.message}</p>`;
+      }
+    });
+  });
+</script>
+
+{% endblock %}

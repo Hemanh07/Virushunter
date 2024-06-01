@@ -1,0 +1,39 @@
+{% extends 'index.html' %}
+{% block url_result %}
+{% load static %}
+<h1>hello world</h1>
+
+
+{% if  url_output %}
+<section id="url_output" class="url_form  output">
+ <table>
+     <thead>
+         <th colspan="2">Your Url is scanned successfully,
+             <br>
+             Here is your <strong></strong>
+         </th>
+     </thead>
+     <tbody>
+         <tr>
+             <td><h2>Url</h2></td>
+             <td><h2>:&nbsp;{{url}}</h2></td>
+         </tr>
+         <tr>
+             <td><h2>Positives</h2></td>
+             <td><h2>:&nbsp;{{positives}}</h2></td>
+         </tr>
+         <tr>
+             <td><h2>Total</h2></td>
+             <td><h2>:&nbsp;{{total}}</h2></td>
+         </tr>
+         <tr>
+             <td><h2>Result</h2></td>
+             <td><h2>:&nbsp;{{result}}</h2></td>
+         </tr>
+         
+     </tbody>
+ </table>    
+ 
+ </section>
+ {%endif%}
+{% endblock %}

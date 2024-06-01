@@ -1,0 +1,77 @@
+{% extends 'index.html' %} {% block landingpage %}
+<style>
+  .h1{
+    background-color: #390084;
+    color: #fff;
+    text-align: center;
+    font-size: 2rem;
+    border-radius: 50px;
+    width: 50%;
+    text-decoration: none;
+  }
+  .landingpage {
+    margin: 50px;
+    padding:1rem ;
+    padding-bottom: 0;
+    background-position-x: center;
+    background-position-y: center;
+    border-radius: 50px;
+
+  }
+  .content_box {
+    display: flex;
+    justify-content: space-between;
+  }
+  .url,.file{
+    height: 550px;
+    width: 45vw;   
+    background-color: rgba(0,0,0,0.1);
+     border-radius: 50px;
+padding: 1rem;
+padding-top:2rem;
+padding-bottom: 4rem;
+display: flex;
+flex-direction: column;
+gap: 0px;
+justify-content: space-around;
+align-items: center;
+  }
+  h1{
+    font-size: 1.5rem;
+  }
+  
+  
+
+  .divide{
+    height: 550px;
+    width: 10px;
+    background-color: #3d3c3c;
+  }
+  .procedure_box{
+    font-size: 1rem;
+  }
+</style>
+<section class="landingpage">
+  <h1 class="">
+    
+    <section class="content_box">
+      <section class="url">
+        <img src="../static/webs.png" height="100px" width="100px" alt="">
+             
+<p>VirusHunter's File Scan feature enables users to upload files for comprehensive analysis. It utilizes  extensive array  of antivirus engines to thoroughly examine each file for malware, including viruses, trojans, and worms. This ensures that any threats are detected and mitigated, providing robust protection for your computer and data.</p>
+
+        <a href="url_scan" class="h1"><h1 > URL SCANNER</h1></a>
+
+      </section>
+      <section class="file">
+        <img src="../static/file.png" height="100px" width="100px" alt="">
+        <p>VirusHunter's URL Scan feature offers an in-depth analysis of web addresses to detect malicious content. By leveraging extensive range of website security tools, it identifies potential threats such as viruses, phishing attempts, and other harmful elements, ensuring users can browse the internet safely and securely</p>
+        <a href="file_scan" class="h1"><h1 >FILE  SCANNER</h1></a>
+        
+            
+          
+      </section>
+    </section>
+  </h1>
+</section>
+{% endblock %}

@@ -1,0 +1,280 @@
+{% extends 'index.html' %} {% block file %} {% load static %}
+
+<style>
+  .file_page {
+    margin-top: 65px;
+    height: 588px;
+    width: 58vw;
+    padding: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    color: #000;
+    text-shadow: 2px 2px 10px white;
+  }
+  .file_form {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+  }
+  .scan_button {
+    background-color: #9835de;
+    font-size: 1.5rem;
+    padding: 0.5rem 4rem;
+
+    color: #fff;
+    border-radius: 20px;
+  }
+  .scan_button:hover {
+    background-color: #ef2fd4;
+    cursor: pointer;
+  }
+  .output {
+  
+    display: none;
+  width: 90%;
+justify-content: center;
+margin: auto;
+}
+
+  .loader {
+    display: none;
+    width: 300px;
+    height: 300px;
+  }
+
+  .loader div {
+    border-radius: 50%;
+  }
+  .loader .centergaurd {
+    width: 100px;
+    height: 100px;
+    /*background-color: #3498db;*/
+    border: rgb(2, 253, 253) 5px solid;
+    border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  .loader .centergaurd .center {
+    width: 50px;
+    height: 50px;
+    background-color: aqua;
+    border-radius: 50%;
+  }
+  .dottedring {
+    width: 200px;
+    height: 200px;
+    border: aqua dotted 10px;
+    border-radius: 50%;
+    animation: spin 3s linear infinite;
+  }
+  .outbounce {
+    width: 250px;
+    height: 250px;
+    border: transparent 10px solid;
+    border-top: aqua solid 10px;
+    border-bottom: aqua solid 10px;
+    border-radius: 50%;
+    animation: bounce 3s linear infinite;
+  }
+  .outer {
+    width: 300px;
+    height: 300px;
+    border: transparent 10px solid;
+    border-top: aqua solid 10px;
+    border-radius: 50%;
+    animation: spin 3s linear infinite;
+  }
+  .outermost {
+    width: 330px;
+    height: 330px;
+    border: transparent 10px solid;
+    border-top: aqua solid 10px;
+    border-radius: 50%;
+    animation: spins 3s linear infinite;
+  }
+  .flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes spined {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(90deg);
+    }
+  }
+  @keyframes spins {
+    0% {
+      transform: rotate(360deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+  @keyframes bounce {
+    0% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(180deg);
+    }
+    75% {
+      transform: rotate(90deg);
+    }
+    100% {
+      transform: rotate(180deg);
+    }
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.5);
+    }
+  }
+</style>
+<div id="file_page" class="file_page">
+  <form
+    method="post"
+    action="file_scan"
+    enctype="multipart/form-data"
+    class="file_form"
+    id="file_form"
+  >
+    {% csrf_token %}
+    <div class="fileForm">{{ form.as_p }}</div>
+    <button type="submit" class="scan_button">Scan</button>
+    <div class="loader" id="loader">
+      <div class="outermost flex">
+        <div class="outer flex">
+          <div class="outbounce flex">
+            <div class="flex dottedring">
+              <div class="centergaurd flex">
+                <div class="center"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<section id="file_output" class="file_page output">
+  <table>
+    <thead>
+      <th colspan="2">
+        Your File is scanned successfully,
+        <br />
+        Here is your <strong></strong>
+      </th>
+    </thead>
+    <tbody>
+      <tr>
+        <td><h2>Filename</h2></td>
+        <td>
+          <h2>:&nbsp;<span id="filename">:</span></h2>
+        </td>
+      </tr>
+      <tr>
+        <td><h2>Size</h2></td>
+        <td>
+          <h2>:&nbsp;<span id="size">:</span></h2>
+        </td>
+      </tr>
+      <tr>
+        <td><h2>Hash</h2></td>
+        <td>
+          <h2>:&nbsp;<span id="hash">:</span></h2>
+        </td>
+      </tr>
+      <tr>
+        <td><h2>Description</h2></td>
+        <td>
+          <h2>:&nbsp;<span id="descp">:</span></h2>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h2>:&nbsp;<span id="malicious_count">:</span></h2>
+        </td>
+      </tr>
+      <tr>
+        <td><h2>Result</h2></td>
+        <td>
+          <h2>:&nbsp;<span id="result">:</span></h2>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("file_form");
+    const loadingContainer = document.getElementById("loader");
+    const responseContainer = document.getElementById("file_output");
+    //loadingContainer.style.display="none";
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      loadingContainer.style.display = "block";
+      responseContainer.style.display = "none";
+
+      const formData = new FormData(form);
+      const fileObject = formData.get("file");
+      const { name } = fileObject;
+      console.log(name);
+      const csrfToken = form.querySelector("[name=csrfmiddlewaretoken]").value;
+
+      fetch(form.action, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrfToken,
+        },
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data, "hi",data.size,document.querySelector("#filename").innerText);
+          loadingContainer.style.display = "none";
+          responseContainer.style.display = "flex";
+          document.querySelector("#file_page").style.display = "none";
+          document.querySelector("#filename").innerHTML = name;
+          document.querySelector("#size").innerHTML = data.size;
+          document.querySelector("#hash").innerHTML = data.hash;
+          document.querySelector("#descp").innerHTML = data.desp;
+          document.querySelector("#malicious_count").innerHTML =
+            data.malicious_count;
+          if (data.error) {
+            responseContainer.innerHTML = `<p>An error occurred: ${data.error}</p>`;
+          } else {
+            //document.getElementById("result").innerText = data.desp;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          loadingContainer.style.display = "none";
+          responseContainer.style.display = "block";
+          responseContainer.innerHTML = `<p style="color:'white;"> ytfuiduhbhtfygAn error occurred: ${error.message}</p>`;
+        });
+    });
+  });
+</script>
+{% endblock %}

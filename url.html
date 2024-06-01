@@ -1,0 +1,458 @@
+{% extends 'index.html' %} {% block url %} {% load static %}
+<style>
+  .url_page {
+    margin-top: 65px;
+    height: 588px;
+    width: 58vw;
+    padding: 0.5rem;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #000;
+    text-shadow: 2px 2px 10px white;
+  }
+  .url_form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    font-size: 3rem;
+  }
+  input[type="url"] {
+    width: 30vw;
+    height: 2rem;
+    padding: 2rem;
+    font-size: 2rem;
+    border: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    border-radius: 20px;
+  }
+  .input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .scan_button {
+    background-color: #9835de;
+    font-size: 1.5rem;
+    padding: 0.5rem 4rem;
+
+    color: #fff;
+    border-radius: 20px;
+  }
+  .scan_button:hover {
+    background-color: #ef2fd4;
+    cursor: pointer;
+  }
+  .output {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    gap: 10px;
+  }
+  .loading_gif {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+  }
+  #url_output {
+    
+    display: none;
+  }
+  canvas {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    width: 100vw;
+    max-width: 800px;
+    height:100vh;
+}
+.flex{
+  display: flex;
+            justify-content: center;
+            align-items: center;
+}
+#url{
+  overflow: scroll;
+}
+.loader {
+  display: none;
+            width: 300px;
+            height: 300px;
+        }
+
+        .loader div {
+            border-radius: 50%;
+        }
+
+ /*        .loader div:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            border-top: 12px solid #3498db;
+        }
+
+        .loader div:nth-child(2) {
+            width: 240px;
+            height: 240px;
+            top: 30px;
+            left: 30px;
+            border-top: 12px solid #e74c3c;
+            animation-delay: -0.4s;
+        }
+
+        .loader div:nth-child(3) {
+            width: 180px;
+            height: 180px;
+            top: 60px;
+            left: 60px;
+            border-top: 12px dashed #f1c40f;
+            animation-delay: -0.8s;
+        }
+
+        .loader div:nth-child(4) {
+            width: 120px;
+            height: 120px;
+            top: 90px;
+            left: 90px;
+            border-top: 12px solid #2ecc71;
+            animation-delay: -1.2s;
+        }
+
+        .loader div:nth-child(5) {
+            width: 60px;
+            height: 60px;
+            top: 120px;
+            left: 120px;
+            border-top: 12px solid #9b59b6;
+            animation-delay: -1.6s;
+        } */
+
+        .loader .centergaurd {
+            
+            width: 100px;
+            height: 100px;
+            /*background-color: #3498db;*/
+            border: rgb(2, 253, 253) 5px solid;
+            border-radius: 50%;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        .loader .centergaurd .center {
+            width: 50px;
+            height: 50px;
+            background-color: aqua;
+            border-radius: 50%;
+        }
+        .dottedring{
+          width: 200px;
+          height: 200px;
+          border: aqua dotted 10px;
+          border-radius: 50%;
+          animation: spin 3s linear infinite;
+        }
+        .outbounce{
+          width: 250px;
+          height: 250px;
+          border: transparent 10px solid;
+          border-top: aqua solid 10px;
+          border-bottom: aqua solid 10px;
+          border-radius: 50%;
+          animation: bounce 3s linear infinite;
+        }
+        .outer{
+          width: 300px;
+          height: 300px;
+          border: transparent 10px solid;
+          border-top: aqua solid 10px;
+          border-radius: 50%;
+          animation: spin 3s linear infinite;
+        }
+        .outermost{
+          width: 330px;
+          height: 330px;
+          border: transparent 10px solid;
+          border-top: aqua solid 10px;
+          border-radius: 50%;
+          animation: spins 3s linear infinite;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes spined {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(90deg);
+            }
+        }
+        @keyframes spins {
+            0% {
+                transform: rotate(360deg);
+            }
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+        @keyframes bounce {
+            0% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(180deg);
+            }
+            75%{
+              transform: rotate(90deg);
+            }
+            100%{
+              transform: rotate(180deg);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.5);
+            }
+        }
+</style>
+<div class="url_page" id="url_page">
+  
+
+  <form class="url_form" id="url_form" action="url_scan" method="post">
+    {%csrf_token%}
+    <div>
+      <label class="" for="text">Enter The Url:</label>
+      <input type="url" name="text" id="text" />
+    </div>
+    <button type="submit" class="scan_button">Submit</button>
+    <div class="loader" id="loader">
+      
+        <div class="outermost flex">
+        <div class="outer flex">
+        <div class="outbounce flex">
+        <div class="flex dottedring">
+        <div class="centergaurd flex">
+          <div class="center"></div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+    </div>
+  </form>
+</div>
+<!-- <div class="url_page loading_gif" id="loading-container" >
+  <video onloadstart="this.defaultPlaybackRate=2.0" id="video" class="url_page loading_gif" autoplay loop >
+    <source  src="../static/loading.mp4"  type="video/mp4" />
+  </video>
+</div>
+<canvas id="canvas"></canvas> -->
+
+
+
+<section id="url_output" class="url_page   output">
+  <table>
+    <thead>
+      <th colspan="2">
+        Your Url is scanned successfully,
+        <br />
+        Here is your <strong></strong>
+      </th>
+    </thead>
+    <tbody>
+      <tr>
+        <td><h2>Url</h2></td>
+        <td>
+          <h2>:&nbsp;<span id="url"></span></h2>
+        </td>
+      </tr>
+      <tr>
+        <td><h2>Positives</h2></td>
+        <td>
+          <h2>:&nbsp;<span id="positives"></span></h2>
+        </td>
+      </tr>
+      <tr>
+        <td><h2>Total</h2></td>
+        <td>
+          <h2>:&nbsp;<span id="total"></span></h2>
+        </td>
+      </tr>
+      <tr>
+        <td><h2>Result</h2></td>
+        <td>
+          <h2>:&nbsp;<span id="result"></span></h2>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  /* console.log(document.querySelector('video'))
+            const urlForm=document.querySelector('.url_form')
+            urlForm.addEventListener('submit',()=>{
+                urlForm.style.display='none';
+                document.querySelector('video').style.display='block';
+
+            })
+
+            $(document).ready(function() {
+            $('#url_form').on('submit', function(event) {
+                event.preventDefault();
+                $('#loading-container').show();
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: formData,
+                    success: function(response) {
+                        $('#loading-container').hide();
+                        console.log(response)
+                        // Handle the response here
+                        // e.g., update the DOM with response data
+                    },
+                    error: function(xhr, status, error) {
+                        $('#loading-container').hide();
+                        // Handle errors here
+                        alert('An error occurred: ' + error);
+                    }
+                });
+            });
+        }); */
+
+        /* const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+video.defaultPlaybackRate=2.0;
+video.addEventListener('play', () => {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    function renderFrame() {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const length = frame.data.length;
+
+        for (let i = 0; i < length; i += 4) {
+            const r = frame.data[i];
+            const g = frame.data[i + 1];
+            const b = frame.data[i + 2];
+            
+            // Check if the current pixel is green
+            if (g <=40&& r <=40 && b <=40) {
+                frame.data[i + 3] = 0; // Set alpha to 0 (transparent)
+            }
+        }
+
+        ctx.putImageData(frame, 0, 0);
+        requestAnimationFrame(renderFrame);
+    }
+
+    requestAnimationFrame(renderFrame);
+});
+ */
+
+ /*  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("url_form");
+    const responseContainer = document.getElementById("url_output");
+    loadingContainer.style.display = "none";
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      form.style.display = "none";
+      //loadingContainer.style.display = "block";
+      responseContainer.style.display = "block";
+
+      const formData = new FormData(form);
+      console.log(formData);
+      const csrfToken = form.querySelector("[name=csrfmiddlewaretoken]").value;
+
+      fetch(form.action, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrfToken,
+        },
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+
+          form.innerText = "";
+          responseContainer.style.display = "flex";
+          if (data.error) {document.getElementById("url").innerText = data.url;
+          } else {
+            document.getElementById("url").innerText = data.url;
+            document.getElementById("positives").innerText = data.positives;
+            document.getElementById("total").innerText = data.total;
+            document.getElementById("result").innerText = data.result;
+          }
+        })
+        .catch((error) => {
+          loadingContainer.style.display = "none";
+          responseContainer.style.display = "block";
+          responseContainer.innerHTML = `<p>An error occurred: ${error.message}</p>`;
+        });
+    });
+  }); */
+  
+  document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('url_form');
+            const loadingContainer = document.getElementById('loader');
+            const responseContainer = document.getElementById('url_output');
+            //loadingContainer.style.display="none";
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                loadingContainer.style.display = 'block';
+                responseContainer.style.display = 'none';
+
+                const formData = new FormData(form);
+                const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                    },
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                  console.log(document.querySelector('input').value)
+                    loadingContainer.style.display = 'none';
+                    responseContainer.style.display = 'flex';
+                    if (data.error) {
+                        responseContainer.innerHTML = `<p>An error occurred: ${data.error}</p>`;
+                    } else {
+                      document.getElementById('url_page').style.display="none";
+                        document.getElementById("url").innerText = data.url;
+            document.getElementById("positives").innerText = data.positives;
+            document.getElementById("total").innerText = data.total;
+            document.getElementById("result").innerText = data.result;
+                    }
+                })
+                .catch(error => {
+                    loadingContainer.style.display = 'none';
+                    responseContainer.style.display = 'block';
+                    responseContainer.innerHTML = `<p>An error occurred: ${error.message}</p>`;
+                });
+            });
+        });
+</script>
+{% endblock %}

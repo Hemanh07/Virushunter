@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+font-family: 'Poppins';
+box-sizing: border-box;
+
+}
+
+.poppins-regular {
+font-family: "Poppins", sans-serif;
+font-weight: 400;
+font-style: normal;
+
+}
+.poppins-black {
+font-family: "Poppins", sans-serif;
+font-weight: 900;
+font-style: normal;
+}
+.heading{
+width: 100vw;
+
+    display: flex;
+    width: 100vw;
+    justify-content: center;
+
+
+}
+.title{
+
+font-size: 4rem;
+color:#005477;
+width: fit-content;
+}
+.quotes{
+
+color: #5A9040;
+}
+.main_quote{
+    letter-spacing: 10px;
+font-size: 50px;
+}
+.heading_box{
+text-align:center;
+}
+/* .Upload{
+border: 1px solid #000;
+display: flex;
+flex-direction: column;
+height: 70vh;
+}
+.file_form_section,.url_form_section{
+width: 100%;
+
+}
+.url_form,.file_form{
+display: flex;
+height: 100%;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+
+}
+.output{
+    border: 1px solid #000;
+    height: 100%;
+    width:50vw;
+    margin-left: 20vw;
+    padding: 50px;
+}
+.upload_heading_box{
+display: flex;
+justify-content: center;
+align-items: center;
+}
+.upload_heading_box h2{
+width: 100%;
+}
+.url_heading_box{
+color:grey;
+}
+.body{
+    background: url('../static/galaxy.webp') no-repeat;
+    background-size: 100%;
+    color: #ffffff;
+}
+form,.fileForm{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+} */
+ .empty{
+    height: 230px;
+    width: 10vw;
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://pyscript.net/releases/2024.5.1/core.css">
+  <script type="module" src="https://pyscript.net/releases/2024.5.1/core.js">
+    
+  </script>
+  <py-config>
+        packages = ['requests','time','json']
+
+        
+    </py-config>
+    
+<div id="lineplot"></div>
+</head>
+<body>
+  <input type="text" id="url" name="url">
+  <button type="submit" py-click="print">submit</button>
+  <p id="output"></p>
+  <py-script>
+    import sys
+    from pyscript import display,document
+    from pyweb import pydom
+    
+    async def print (e):
+      input=pydom['#url']
+      import requests
+      import time
+      import json
+
+
+
+
+
+      api_key = '4f16a4d0172e4bdabc26ca8ea76fd823d3bb59381259c2bb4c750f2833a9d40a'
+      url = 'https://www.virustotal.com/vtapi/v2/url/report'
+
+
+      def scan(site):
+          params = {'apikey': api_key, 'resource': site}
+          response = requests.get(url, params=params)
+          response_json = json.loads(response.content)
+
+        
+          if 'positives' in response_json:
+                  
+                  if response_json['positives'] == 0:
+                      display('NOT Malicious \n')
+                  elif 1 <= response_json['positives'] < 3:
+                      display('MAYBE MALICIOUS\n')  
+                  elif response_json['positives'] >= 3:
+                      display('MALICIOUS!\n')   
+          else:
+              display('URL not found or not scanned\n')
+
+
+          time.sleep(15)  # Delay to avoid rate limiting
+
+
+
+
+
+      
+      scan(input.value[0])
+    output=document.querySelector("#output")
+
+    </py-script>
+</body>
+</html>

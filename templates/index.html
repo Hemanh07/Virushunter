@@ -1,0 +1,178 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virus Hunter</title>
+    <link rel="stylesheet" href="{% static '../static/style.css' %}">
+
+  <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+font-family: 'Poppins';
+box-sizing: border-box;
+font-size: 1rem;
+}
+body{
+    background-position-x: center;
+    background-position-y: center;
+
+}
+.poppins-regular {
+font-family: "Poppins", sans-serif;
+font-weight: 400;
+font-style: normal;
+
+}
+.poppins-black {
+font-family: "Poppins", sans-serif;
+font-weight: 900;
+font-style: normal;
+}
+.heading{
+width: 100vw;
+padding: 0.5rem;
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+.title{
+    color: #000;
+    padding-left: 1rem;
+display: inline;
+font-size: 3rem;
+width:100%;
+left:130px; 
+}
+.quotes{
+/*color: #a1ff72;*/
+letter-spacing: 7px;
+padding-left: 1rem;
+}
+.main_quote{
+font-size: 50px;
+letter-spacing: 10px;
+padding-left: 1rem;
+
+}
+.empty{
+    height: 140px;
+    width: 10vw;
+}
+.flex{
+    display: flex;
+    gap: 3rem;
+    flex-direction: row-reverse;
+    width: 100%;
+}
+.list{    
+    color: #390084;
+    
+    font-weight: 400;
+    flex-direction: row;
+    justify-content: center;
+}
+.heading_box{
+    display: flex;
+    width: fit-content;
+    border-radius: 10px;
+    background-color: rgba(255,255,255,0.7);
+    flex-direction: column;
+    justify-content: center;
+}
+ li a{
+    color: #390084;
+    text-decoration: none;
+    font-size: 1.5rem;
+
+}
+ li a:hover{
+    text-decoration: underline;
+    text-underline-offset: 10px;
+    text-decoration-color:#390084;
+}
+
+footer{
+    width: 100vw;
+    color: #fff;
+    font-weight: 400;
+    margin-top: 30px;
+    background-color: rgb(113, 113, 113);
+    text-align: center;
+    bottom: 0;
+    position: absolute;
+    bottom: 0;
+}
+.urlpage{
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 0;
+    border-bottom: 0;
+    margin-bottom: 0;
+}
+.quotes_box{
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+}
+  </style>
+  
+
+</head>
+
+<body class=" poppins-regular">
+
+<header>
+        <div class="heading ">
+            <img src="{% static '../static/logoo3.png' %}" height="150px" width="" class="" alt=""/>
+            <h1 class="title poppins-black">Virus Hunter</h1>
+            <ul class="flex ">
+                <li class="flex list"><a href="url_scan">Url Scanner</a></li>
+                <li class="flex list"><a href="file_scan">File Scanner</a></li>
+                <li class="flex list"><a href="home">Home</a></li>
+            </ul>
+        </div>
+    <section class="quotes_box">
+        <div class="heading_box">            
+            <h1 class="quotes main_quote">Empower Your Cyber Defense</h1>
+        </div>
+    </section>
+                
+</header>
+<main >
+<section class="landing_page">
+    {% block landingpage %}
+    {% endblock %}
+</section>
+<section class="urlpage">
+{% block url %}
+{% endblock %}
+{% block url_result %}
+{% endblock %}
+</section>
+
+<section class="urlpage">
+    {% block file %}
+    {% endblock %}
+    </section>
+    
+
+</main>   
+
+
+<footer>
+<h1>
+    &copy; Virus Hunter
+
+</h1></footer>
+<script>
+</script>
+</body>
+</html>
